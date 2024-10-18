@@ -1,0 +1,32 @@
+.layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    background-color: #282c34;
+    padding: 10px;
+    color: white;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header nav a {
+    margin: 0 10px;
+    color: white;
+    text-decoration: none;
+}
+
+.content {
+    flex-grow: 1;
+    padding: 20px;
+}
+
+.footer {
+    background-color: #282c34;
+    color: white;
+    text-align: center;
+    padding: 10px;
+}
