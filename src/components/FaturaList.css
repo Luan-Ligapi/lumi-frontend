@@ -1,4 +1,4 @@
-table {
+.fatura-table {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
@@ -6,23 +6,38 @@ table {
     text-align: left;
 }
 
-table th, table td {
+.fatura-table th, .fatura-table td {
     padding: 12px 15px;
+    text-align: center;
 }
 
-table thead th {
+.fatura-table thead th {
     background-color: #009879;
     color: #ffffff;
 }
 
-table tbody tr {
+.fatura-table tbody tr {
     border-bottom: 1px solid #dddddd;
 }
 
-table tbody tr:nth-of-type(even) {
+.fatura-table tbody tr:nth-of-type(even) {
     background-color: #f3f3f3;
 }
 
-table tbody tr:last-of-type {
+.fatura-table tbody tr:last-of-type {
     border-bottom: 2px solid #009879;
+}
+
+/* Estilo para os ícones de PDF */
+.pdf-icon-cell {
+    text-align: center;
+}
+
+.pdf-icon {
+    color: #ff0000;
+    transition: transform 0.2s;
+}
+
+.pdf-icon:hover {
+    transform: scale(1.1);
 }

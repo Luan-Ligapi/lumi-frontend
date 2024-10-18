@@ -19,4 +19,13 @@ export const getFaturaById = async (id) => {
   return response.data;
 };
 
+// Aqui está a função que você precisa exportar corretamente
+export const getFaturasByClientAndYear = async (numeroCliente, year) => {
+  const response = await api.get(`/faturas?numeroCliente=${numeroCliente}&ano=${year}`);
+  return response.data;
+};
+
+
+
+
 export default api;
