@@ -17,16 +17,16 @@ function Library() {
   useEffect(() => {
     async function fetchClientes() {
       try {
-        const clientesData = await getClientes(); // Busca os clientes
+        const clientesData = await getClientes();
         setClientes(clientesData);
       } catch (error) {
         console.error("Error fetching clients:", error);
         setErrorMessage("Erro ao carregar clientes.");
       }
     }
-    fetchClientes(); // Chama a função ao montar o componente
+    fetchClientes();
   }, []);
-
+  
   // UseEffect para buscar todas as faturas
   useEffect(() => {
     async function fetchAllFaturas() {
@@ -43,14 +43,16 @@ function Library() {
   
   const handleClientSelection = (e) => {
     const clientId = e.target.value;
-    const selectedClient = clientes.find(cliente => cliente.id === parseInt(clientId));
+    console.log("clientId: " + clientId);
+    const selectedClient = clientes.find(cliente => cliente.id == parseInt(clientId));
     setSelectedClientId(clientId);
     setSelectedClientNumber(selectedClient ? selectedClient.numeroCliente : '');
   };
 
   const handleSearch = async () => {
-    if (selectedClientNumber && selectedYear) {
+    if (selectedClientNumber || selectedYear) {
       try {
+        console.log(selectedClientNumber, selectedYear);
         const faturas = await getFaturasByClientAndYear(selectedClientNumber, selectedYear); // Mudança para busca por ano
         if (faturas.length === 0) {
           setErrorMessage("Nenhuma fatura encontrada para este ano.");
@@ -81,6 +83,7 @@ function Library() {
           selectedClientId={selectedClientId} 
         />
         <YearSelector 
+          faturas={faturas} // Exibe os faturas no seletor
           selectedYear={selectedYear} 
           setSelectedYear={setSelectedYear} 
         />
@@ -89,7 +92,7 @@ function Library() {
 
       {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      {faturas.length > 0 && <FaturaTable faturas={faturas} />}
+      {faturas?.length > 0 && <FaturaTable faturas={faturas} clientes={clientes} />}
     </div>
   );
 }

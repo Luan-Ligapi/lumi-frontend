@@ -1,23 +1,40 @@
 import React from 'react';
 import './FaturaTable.css';
+import { FaFilePdf } from 'react-icons/fa'; // Importando o ícone de PDF
 
 function FaturaTable({ faturas, clientes }) {
 
   // Função para pegar o nome do cliente, associando o clienteId corretamente
   const getClientName = (clienteId) => {
-    console.log("Clientes disponíveis: ", clientes); // Log dos clientes disponíveis
-    console.log("Procurando clienteId: ", clienteId); // Log do clienteId que estamos procurando
-
-    const cliente = clientes && clientes.find(cliente => cliente.id === clienteId);
-
+    const cliente = clientes && clientes.find(cliente => cliente.id === parseInt(clienteId));
     if (!cliente) {
       console.log(`Cliente não encontrado para clienteId: ${clienteId}`);
       return 'Cliente não encontrado';
     }
-
-    console.log(`Cliente encontrado: ${cliente.nome} para clienteId: ${clienteId}`);
     return cliente.nome;
   };
+
+  // Agrupar faturas por unidade consumidora (numero_fatura)
+  const groupedFaturas = faturas.reduce((acc, fatura) => {
+    const { numero_fatura } = fatura;
+    if (!acc[numero_fatura]) {
+      acc[numero_fatura] = {
+        ...fatura,
+        meses: {} // Para armazenar os links dos PDFs por mês
+      };
+    }
+    // Adicionar o link PDF ao mês correspondente
+    const mes = fatura.referencia_mes?.split('/')[0]; // Supondo que o mês está na primeira parte da referência
+    acc[numero_fatura].meses[mes] = `/pdf/${fatura.numero_fatura}`;
+    return acc;
+  }, {});
+
+  // Ordenar as faturas com base no nome do cliente
+  const sortedFaturas = Object.values(groupedFaturas).sort((a, b) => {
+    const nomeA = getClientName(a.clienteId);
+    const nomeB = getClientName(b.clienteId);
+    return nomeA.localeCompare(nomeB);
+  });
 
   return (
     <table className="fatura-table">
@@ -40,23 +57,23 @@ function FaturaTable({ faturas, clientes }) {
         </tr>
       </thead>
       <tbody>
-        {faturas.map((fatura) => (
-          <tr key={fatura.id}>
-            <td>{fatura.numero_fatura}</td>
-            <td>{getClientName(fatura.clienteId)}</td>
+        {sortedFaturas.map((fatura) => (
+          <tr key={fatura?.numero_fatura}>
+            <td>{fatura?.numero_fatura}</td>
+            <td>{getClientName(fatura?.clienteId)}</td>
             {/* Exibir o ícone de PDF somente para o mês correspondente */}
-            <td>{fatura.data_emissao.includes('-01-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-02-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-03-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-04-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-05-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-06-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-07-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-08-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-09-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-10-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-11-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
-            <td>{fatura.data_emissao.includes('-12-') ? <a href={`/pdf/${fatura.numero_fatura}`}><img src="/pdf-icon.png" alt="PDF" /></a> : '-'}</td>
+            <td>{fatura?.meses['JAN'] ? <a href={fatura.meses['JAN']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['FEV'] ? <a href={fatura.meses['FEV']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['MAR'] ? <a href={fatura.meses['MAR']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['ABR'] ? <a href={fatura.meses['ABR']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['MAI'] ? <a href={fatura.meses['MAI']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['JUN'] ? <a href={fatura.meses['JUN']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['JUL'] ? <a href={fatura.meses['JUL']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['AGO'] ? <a href={fatura.meses['AGO']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['SET'] ? <a href={fatura.meses['SET']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['OUT'] ? <a href={fatura.meses['OUT']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['NOV'] ? <a href={fatura.meses['NOV']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['DEZ'] ? <a href={fatura.meses['DEZ']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
           </tr>
         ))}
       </tbody>

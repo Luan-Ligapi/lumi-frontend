@@ -9,6 +9,7 @@ export const getClientes = async () => {
   return response.data;
 };
 
+
 export const getFaturas = async () => {
   const response = await api.get('/faturas');
   return response.data;
@@ -25,6 +26,18 @@ export const getFaturasByClientAndYear = async (numeroCliente, year) => {
   return response.data;
 };
 
+export const postUpload = async (file) => {
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const response = await api.post(`/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
+
+  return response.data;
+};
 
 
 

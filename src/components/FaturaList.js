@@ -33,13 +33,13 @@ function FaturaList() {
                 </thead>
                 <tbody>
                     {faturas.map((fatura) => (
-                        <tr key={fatura.id}>
-                            <td>{fatura.numero_fatura}</td>
-                            <td>{fatura.clienteId}</td>
-                            <td>{fatura.valor_total}</td>
-                            <td>{new Date(fatura.data_emissao).toLocaleDateString()}</td>
+                        <tr key={fatura?.id}>
+                            <td>{fatura?.numero_fatura}</td>
+                            <td>{fatura?.clienteId}</td>
+                            <td>{fatura?.valor_total}</td>
+                            <td>{new Date(fatura?.data_emissao).toLocaleDateString()}</td>
                             <td>
-                                <Link to={`/faturas/${fatura.id}`}>Ver Detalhes</Link>
+                                <Link to={`/faturas/${fatura?.id}`}>Ver Detalhes</Link>
                             </td>
                         </tr>
                     ))}

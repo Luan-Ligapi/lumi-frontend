@@ -1,21 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
 /**
  * YearSelector
- * @description Componente que exibe um dropdown para selecionar o ano.
+ * @description Componente que exibe um dropdown para selecionar o ano. Lista apenas os anos que têm faturas e define o ano por padrão se houver apenas um ou se nenhum ano for encontrado.
+ * @param {Array} faturas - Lista de faturas disponíveis.
  * @param {string} selectedYear - O ano atualmente selecionado.
  * @param {Function} setSelectedYear - Função para definir o ano selecionado.
  */
-function YearSelector({ selectedYear, setSelectedYear }) {
+function YearSelector({ faturas, selectedYear, setSelectedYear }) {
+
+  // Obter o ano atual
+  const currentYear = new Date().getFullYear();
+
+  // Extrair os anos únicos das faturas, filtrando para remover valores inválidos e vazios
+  const availableYears = [...new Set(faturas
+    .map(fatura => fatura.referencia_mes?.split('/')[1])
+    .filter(year => year && year.trim()))]; // Filtra valores vazios
+
+  // Definir automaticamente o ano selecionado se houver apenas um ou se nenhum ano for encontrado
+  useEffect(() => {
+    if (availableYears.length === 1) {
+      setSelectedYear(availableYears[0]);
+    } else if (availableYears.length === 0) {
+      setSelectedYear(currentYear.toString()); // Define o ano atual se nenhum ano for encontrado
+    }
+  }, [availableYears, setSelectedYear, currentYear]);
+
   return (
     <div className="filter">
-      <label>Selecione o Ano:</label>
       <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)}>
-        <option value="">Selecione</option>
-        <option value="2024">2024</option>
-        <option value="2023">2023</option>
-        <option value="2022">2022</option>
-        {/* Adicione outros anos conforme necessário */}
+        {availableYears.length > 1 || availableYears.length === 0 ? (
+          <option value="">Selecione</option>
+        ) : null}
+        {availableYears.length === 0 ? (
+          <option value={currentYear}>{currentYear}</option>
+        ) : (
+          availableYears?.map(year => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))
+        )}
       </select>
     </div>
   );

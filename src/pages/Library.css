@@ -1,79 +1,183 @@
 /* Estilos gerais */
 .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  h1 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-align: center;
-  }
-  
-  /* Estilo da tabela de faturas */
-  .fatura-table {
-    width: 100%;
-    border-collapse: collapse;
-    text-align: left;
-    margin-bottom: 20px;
-  }
-  
-  .fatura-table thead {
-    background-color: #004d25; /* Cor do cabeçalho (verde escuro) */
-    color: white;
-  }
-  
-  .fatura-table th, .fatura-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
-  }
-  
-  .fatura-table tbody tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .fatura-table tbody tr:hover {
-    background-color: #f1f1f1;
-  }
-  
-  .fatura-table a {
-    text-decoration: none;
-    font-size: 1.5em; /* Ajustar o tamanho dos ícones de documento */
-    color: #4caf50; /* Cor do ícone */
-  }
-  
-  .fatura-table a:hover {
-    color: #388e3c; /* Cor do ícone ao passar o mouse */
-  }
-  
-  /* Barra de filtros */
-  .filter-section {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-  
-  .filter {
-    margin-right: 20px;
-  }
-  
-  select {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-  }
-  
-  .btn-search {
-    background-color: #4caf50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .btn-search:hover {
-    background-color: #388e3c;
-  }
-  
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2em;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilo da tabela de faturas */
+.fatura-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.fatura-table thead {
+  background-color: #004d25; /* Cor do cabeçalho (verde escuro) */
+  color: white;
+  text-transform: uppercase;
+}
+
+.fatura-table th, .fatura-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.fatura-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.fatura-table tbody tr:hover {
+  background-color: #f1f1f1;
+}
+
+.fatura-table a {
+  text-decoration: none;
+  font-size: 1.5em; /* Ajustar o tamanho dos ícones de documento */
+  color: #4caf50; /* Cor do ícone */
+}
+
+.fatura-table a:hover {
+  color: #388e3c; /* Cor do ícone ao passar o mouse */
+}
+
+/* Barra de filtros */
+.filter-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter {
+  margin-right: 20px;
+  flex: 1;
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+input, select {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  width: 100%;
+  max-width: 300px;
+}
+
+/* Botões */
+.btn-search {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-search:hover {
+  background-color: #388e3c;
+}
+
+/* Melhorando o layout para os filtros e botões */
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.filter {
+  flex: 1;
+  min-width: 220px;
+}
+
+.filter input {
+  width: calc(100% - 30px); /* Para melhor ajuste com o botão */
+}
+
+.year-selector button {
+  padding: 10px 15px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  margin: 0 5px;
+}
+
+.year-selector button.selected {
+  background-color: #2E7D32;
+}
+.filter {
+  position: relative;
+  display: inline-block;
+  width: 200px;
+}
+
+.dropdown-toggle {
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.dropdown-content {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  z-index: 1;
+  max-height: 150px; /* Limita a altura total do dropdown */
+  overflow-y: auto; /* Adiciona rolagem */
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-bottom: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.client-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.client-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.client-list li:hover {
+  background-color: #f0f0f0;
+}
+
+.client-list li.selected {
+  background-color: #d4edda;
+  font-weight: bold;
+}
