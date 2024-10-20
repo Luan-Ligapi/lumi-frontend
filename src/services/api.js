@@ -39,29 +39,15 @@ export const postUpload = async (file) => {
   return response.data;
 };
 
-export const getEnergiaData = async (cliente, year) => {
+export const getResumoData = async (cliente, year) => {
   const url = cliente && year 
-    ? `/energia?cliente=${cliente}&year=${year}`
-    : '/energia'; // Return all data if no filters
+    ? `/resumo?numeroCliente=${cliente}&ano=${year}`
+    : '/resumo'; // Return all data if no filters
 
+  
   const response = await api.get(url);
   return response.data; // Assuming the response is in JSON format
 };
-
-export const getFinanceiroData = async (cliente, year) => {
-  const url = cliente && year 
-    ? `/financeiro?cliente=${cliente}&year=${year}`
-    : '/financeiro'; // Return all data if no filters
-
-  const response = await api.get(url);
-  return response.data;
-};
-
-export const getResumoData = async () => {
-  const response = await api.get('/resumo');
-  return response.data;
-};
-
 
 
 export default api;

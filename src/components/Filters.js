@@ -1,23 +1,33 @@
-import React from 'react';
+import { useState } from 'react';
 
-const Filters = ({ cliente, periodo, onClienteChange, onPeriodoChange, onApplyFilters }) => {
+const Filters = ({ onFilterChange }) => {
+  const [clientId, setClientId] = useState('');
+  const [startDate, setStartDate] = useState('');
+  const [endDate, setEndDate] = useState('');
+
+  const handleFilter = () => {
+    onFilterChange({ clientId, startDate, endDate });
+  };
+
   return (
-    <div style={{ marginBottom: '20px' }}>
+    <div>
       <input
         type="text"
-        placeholder="Filtrar por Cliente"
-        value={cliente}
-        onChange={(e) => onClienteChange(e.target.value)}
-        style={{ marginRight: '10px' }}
+        placeholder="Número do Cliente"
+        value={clientId}
+        onChange={(e) => setClientId(e.target.value)}
       />
       <input
-        type="text"
-        placeholder="Filtrar por Período (ex: 2024)"
-        value={periodo}
-        onChange={(e) => onPeriodoChange(e.target.value)}
-        style={{ marginRight: '10px' }}
+        type="date"
+        value={startDate}
+        onChange={(e) => setStartDate(e.target.value)}
       />
-      <button onClick={onApplyFilters}>Aplicar Filtros</button>
+      <input
+        type="date"
+        value={endDate}
+        onChange={(e) => setEndDate(e.target.value)}
+      />
+      <button onClick={handleFilter}>Filtrar</button>
     </div>
   );
 };
