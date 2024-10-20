@@ -4,13 +4,10 @@ import './Navbar.css';
 import { postUpload } from '../services/api'; // Mantém o import de getClientes
 
 function Navbar() {
-    const [selectedFile, setSelectedFile] = useState(null);
-
     // Função para capturar o arquivo selecionado e enviá-lo automaticamente
     const handleFileChange = (event) => {
         const file = event.target.files[0];
         if (file) {
-            setSelectedFile(file);
             handleUpload(file); // Enviar o arquivo automaticamente após a seleção
         }
     };
@@ -20,7 +17,6 @@ function Navbar() {
         try {
             const data = await postUpload(file);
             console.log('Response:', data);
-            setSelectedFile(null); // Limpar o arquivo após o upload
         } catch (error) {
             console.error('Erro ao enviar o arquivo:', error);
             alert('Ocorreu um erro ao enviar o arquivo.');

@@ -1,67 +1,127 @@
 import React, { useState, useEffect } from 'react';
-import { getFaturas } from '../services/api';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { getClientes, getEnergiaData, getResumoData } from '../services/api'; 
+import ClientSelector from '../components/ClientSelector';
+import YearSelector from '../components/YearSelector';
+import EnergyLineChart from '../components/EnergyLineChart';
+import Cards from '../components/Cards';
+import './Dashboard.css';
 
 function Dashboard() {
-  const [faturas, setFaturas] = useState([]);
-  const [totalEnergy, setTotalEnergy] = useState(0);
-  const [totalEconomy, setTotalEconomy] = useState(0);
+  const [clientes, setClientes] = useState([]); // Lista de clientes
+  const [selectedClientId, setSelectedClientId] = useState(''); // ID do cliente selecionado
+  const [selectedClientNumber, setSelectedClientNumber] = useState(''); // Número do cliente selecionado
+  const [selectedYear, setSelectedYear] = useState(''); // Ano selecionado
+  const [energiaData, setEnergiaData] = useState([]); // Dados de energia
+  const [totalEnergiaConsumida, setTotalEnergiaConsumida] = useState(0); // Total de energia consumida
+  const [totalEnergiaCompensada, setTotalEnergiaCompensada] = useState(0); // Total de energia compensada
+  const [errorMessage, setErrorMessage] = useState(''); // Mensagens de erro
+  const [loading, setLoading] = useState(false); // Estado de carregamento
 
+  // UseEffect para buscar clientes ao carregar a página
   useEffect(() => {
-    async function fetchData() {
+    async function fetchClientes() {
       try {
-        console.log("Fetching faturas...");
-        const data = await getFaturas();
-        console.log("Faturas fetched:", data);
-        setFaturas(data);
-
-        // Calcular totais de energia e economia
-        const totalEnergy = data.reduce((acc, fatura) => acc + (fatura.energiaConsumida || 0), 0);
-        const totalEconomy = data.reduce((acc, fatura) => acc + (fatura.economia || 0), 0);
-        console.log("Total energy calculated:", totalEnergy);
-        console.log("Total economy calculated:", totalEconomy);
-        setTotalEnergy(totalEnergy);
-        setTotalEconomy(totalEconomy);
+        setLoading(true); // Iniciar o carregamento
+        const clientesData = await getClientes();
+        setClientes(clientesData);
+        setLoading(false); // Terminar o carregamento
       } catch (error) {
-        console.error("Error fetching faturas:", error);
+        console.error("Error fetching clients:", error);
+        setErrorMessage("Erro ao carregar clientes.");
+        setLoading(false);
       }
     }
-    fetchData();
+    fetchClientes();
   }, []);
 
+  // UseEffect para buscar os dados gerais ao carregar a página
+  useEffect(() => {
+    async function fetchResumo() {
+      try {
+        setLoading(true); // Iniciar o carregamento
+        const resumo = await getResumoData();
+        setEnergiaData(resumo.faturas);
+        setTotalEnergiaConsumida(resumo.totalEnergiaConsumida);
+        setTotalEnergiaCompensada(resumo.totalEnergiaCompensada);
+        setLoading(false); // Terminar o carregamento
+      } catch (error) {
+        console.error("Error fetching resumo data:", error);
+        setErrorMessage("Erro ao carregar resumo.");
+        setLoading(false);
+      }
+    }
+    fetchResumo();
+  }, []);
+
+  // Lidar com a seleção de cliente
+  const handleClientSelection = (e) => {
+    const clientId = e.target.value;
+    const selectedClient = clientes.find(cliente => cliente.id === parseInt(clientId));
+    setSelectedClientId(clientId);
+    setSelectedClientNumber(selectedClient ? selectedClient.numeroCliente : '');
+  };
+
+  // Lidar com a busca de dados filtrados
+  const handleSearch = async () => {
+    if (selectedClientNumber || selectedYear) {
+      try {
+        setLoading(true); // Iniciar o carregamento
+        const energia = await getEnergiaData(selectedClientNumber, selectedYear);
+        if (energia.faturas.length === 0) {
+          setErrorMessage("Nenhuma fatura encontrada para este ano.");
+          setEnergiaData([]);
+        } else {
+          setErrorMessage('');
+          setEnergiaData(energia.faturas);
+          setTotalEnergiaConsumida(energia.totalEnergiaConsumida);
+          setTotalEnergiaCompensada(energia.totalEnergiaCompensada);
+        }
+        setLoading(false); // Terminar o carregamento
+      } catch (error) {
+        console.error("Error fetching energia data:", error);
+        setErrorMessage("Erro ao buscar dados de energia.");
+        setEnergiaData([]);
+        setLoading(false);
+      }
+    } else {
+      setErrorMessage("Selecione um cliente e um ano para buscar dados.");
+      setEnergiaData([]);
+    }
+  };
+
   return (
-// Dentro do componente Dashboard:
-<div className="container">
-  <h1>Dashboard de Energia</h1>
-  <div className="cards">
-    <div className="card">
-      <h3>Energia Total Consumida (kWh)</h3>
-      <p>{totalEnergy} kWh</p>
-    </div>
-    <div className="card">
-      <h3>Economia Total (R$)</h3>
-      <p>R$ {totalEconomy}</p>
-    </div>
-  </div>
+    <div className="container">
+      <h1>Dashboard de Energia</h1>
 
-  <div className="actions">
-    <button className="btn btn-primary">Ver Detalhes</button>
-    <button className="btn btn-secondary">Exportar Dados</button>
-  </div>
+      <div className="filter-section">
+        <ClientSelector 
+          clientes={clientes}
+          handleClientSelection={handleClientSelection}
+          selectedClientId={selectedClientId}
+        />
+        <YearSelector 
+          selectedYear={selectedYear}
+          setSelectedYear={setSelectedYear}
+        />
+        <button className="btn btn-search" onClick={handleSearch}>Buscar Dados</button>
+      </div>
 
+      {loading && <p>Carregando dados...</p>}
+      {errorMessage && <p className="error-message">{errorMessage}</p>}
 
-      <h2>Consumo de Energia vs Economia</h2>
-      <ResponsiveContainer width="95%" height={400}>
-        <LineChart data={faturas}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="mes" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Line type="monotone" dataKey="energiaConsumida" stroke="#8884d8" activeDot={{ r: 8 }} />
-          <Line type="monotone" dataKey="economia" stroke="#82ca9d" />
-        </LineChart>
-      </ResponsiveContainer>
+      {/* Exibir os totais gerais ou filtrados */}
+      <Cards 
+        totalEnergiaConsumida={totalEnergiaConsumida}
+        totalEnergiaCompensada={totalEnergiaCompensada}
+      />
+
+      {/* Gráfico de Linha para exibir os dados de energia */}
+      {energiaData.length > 0 && (
+        <div>
+          <h2>Consumo de Energia vs Economia</h2>
+          <EnergyLineChart energiaData={energiaData} />
+        </div>
+      )}
     </div>
   );
 }

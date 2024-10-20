@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getClientes, getFaturasByClientAndYear, getFaturas } from '../services/api'; // Mantém o import de getClientes
+import { getClientes, getFaturasByClientAndYear, getFaturas } from '../services/api'; 
 import ClientSelector from '../components/ClientSelector';
 import YearSelector from '../components/YearSelector';
 import FaturaTable from '../components/FaturaTable';
@@ -44,7 +44,7 @@ function Library() {
   const handleClientSelection = (e) => {
     const clientId = e.target.value;
     console.log("clientId: " + clientId);
-    const selectedClient = clientes.find(cliente => cliente.id == parseInt(clientId));
+    const selectedClient = clientes.find(cliente => cliente.id === parseInt(clientId));
     setSelectedClientId(clientId);
     setSelectedClientNumber(selectedClient ? selectedClient.numeroCliente : '');
   };

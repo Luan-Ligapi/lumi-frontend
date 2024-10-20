@@ -8,14 +8,15 @@ import React, { useEffect } from 'react';
  * @param {Function} setSelectedYear - Função para definir o ano selecionado.
  */
 function YearSelector({ faturas, selectedYear, setSelectedYear }) {
-
   // Obter o ano atual
   const currentYear = new Date().getFullYear();
-
-  // Extrair os anos únicos das faturas, filtrando para remover valores inválidos e vazios
-  const availableYears = [...new Set(faturas
-    .map(fatura => fatura.referencia_mes?.split('/')[1])
-    .filter(year => year && year.trim()))]; // Filtra valores vazios
+  
+  // Extrair os anos únicos das faturas
+  const availableYears = faturas
+    ? [...new Set(faturas
+        .map(fatura => fatura.referencia_mes?.split('/')[1])
+        .filter(year => year && year.trim()))]
+    : [];
 
   // Definir automaticamente o ano selecionado se houver apenas um ou se nenhum ano for encontrado
   useEffect(() => {
@@ -35,7 +36,7 @@ function YearSelector({ faturas, selectedYear, setSelectedYear }) {
         {availableYears.length === 0 ? (
           <option value={currentYear}>{currentYear}</option>
         ) : (
-          availableYears?.map(year => (
+          availableYears.map(year => (
             <option key={year} value={year}>
               {year}
             </option>

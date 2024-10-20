@@ -62,18 +62,18 @@ function FaturaTable({ faturas, clientes }) {
             <td>{fatura?.numero_fatura}</td>
             <td>{getClientName(fatura?.clienteId)}</td>
             {/* Exibir o ícone de PDF somente para o mês correspondente */}
-            <td>{fatura?.meses['JAN'] ? <a href={fatura.meses['JAN']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['FEV'] ? <a href={fatura.meses['FEV']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['MAR'] ? <a href={fatura.meses['MAR']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['ABR'] ? <a href={fatura.meses['ABR']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['MAI'] ? <a href={fatura.meses['MAI']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['JUN'] ? <a href={fatura.meses['JUN']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['JUL'] ? <a href={fatura.meses['JUL']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['AGO'] ? <a href={fatura.meses['AGO']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['SET'] ? <a href={fatura.meses['SET']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['OUT'] ? <a href={fatura.meses['OUT']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['NOV'] ? <a href={fatura.meses['NOV']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
-            <td>{fatura?.meses['DEZ'] ? <a href={fatura.meses['DEZ']}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['JAN'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['FEV'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['MAR'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['ABR'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['MAI'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['JUN'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['JUL'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['AGO'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['SET'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['OUT'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['NOV'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
+            <td>{fatura?.meses['DEZ'] ? <a target='_blank' href={`https://storage.googleapis.com/lumi-luan/faturas/${fatura.file_name}`}><FaFilePdf size={20} color="white" /></a> : '-'}</td>
           </tr>
         ))}
       </tbody>
