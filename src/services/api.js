@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: 'http://localhost:3000', // Porta onde seu backend está rodando
+  baseURL: 'https://lumi-back-970715044436.us-central1.run.app'||'http://localhost:3000', // Porta onde seu backend está rodando
 });
 
 export const getClientes = async () => {
