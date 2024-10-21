@@ -34,6 +34,8 @@ const aggregateData = (data) => {
         energiaCompensada: 0,
         valorSemGDR: 0,
         economiaGDR: 0,
+        contribuicaoIluminacao: 0,
+        valorTotal: 0,
         count: 0
       };
     }
@@ -41,6 +43,8 @@ const aggregateData = (data) => {
     acc[key].energiaCompensada += curr.energiaCompensada;
     acc[key].valorSemGDR += curr.valorSemGDR;
     acc[key].economiaGDR += curr.economiaGDR;
+    acc[key].contribuicaoIluminacao += curr.contribuicaoIluminacao;
+    acc[key].valorTotal += curr.valorTotal;
     acc[key].count += 1;
 
     return acc;
@@ -56,8 +60,22 @@ const aggregateData = (data) => {
     valorSemGDRSomatorio: item.valorSemGDR, // Somatório
     valorSemGDRMedia: item.valorSemGDR / item.count, // Média
     economiaGDRSomatorio: item.economiaGDR, // Somatório
-    economiaGDRMedia: item.economiaGDR / item.count // Média
+    economiaGDRMedia: item.economiaGDR / item.count, // Média
+    contribuicaoIluminacaoSomatorio: item.contribuicaoIluminacao, // Somatório
+    valorTotalSomatorio: item.valorTotal // Somatório do valor total da fatura
   }));
+};
+
+// Função para filtrar dados inválidos (valores nulos ou zerados)
+const filterInvalidData = (data) => {
+  return data.filter(item =>
+    item.energiaCompensadaSomatorio !== 0 ||
+    item.energiaConsumidaSomatorio !== 0 ||
+    item.valorSemGDRSomatorio !== 0 ||
+    item.economiaGDRSomatorio !== 0 ||
+    item.contribuicaoIluminacaoSomatorio !== 0 ||
+    item.valorTotalSomatorio !== 0
+  );
 };
 
 const EnergyLineChart = ({ data }) => {
@@ -70,13 +88,15 @@ const EnergyLineChart = ({ data }) => {
   const formattedData = data.faturas.map((fatura) => ({
     referencia: fatura.referencia_mes,
     energiaConsumida: fatura.consumo_kwh,
-    energiaCompensada: fatura.FaturaDetalhe?.energiaCompensadaGD_quantidade || 0,
+    energiaCompensada: fatura.itens_faturados?.energiaCompensadaGD?.quantidade || 0,
     valorSemGDR: parseFloat(fatura.valor_total),
-    economiaGDR: parseFloat(fatura.FaturaDetalhe?.energiaCompensadaGD_valor * -1 || 0)
+    economiaGDR: parseFloat(fatura.itens_faturados?.energiaCompensadaGD?.valor * -1 || 0),
+    contribuicaoIluminacao: parseFloat(fatura.itens_faturados?.contribuicaoIluminacao || 0),
+    valorTotal: parseFloat(fatura.valor_total)
   }));
 
   // Ordenar e agregar os dados por mês e ano
-  const sortedAndAggregatedData = aggregateData(formattedData).sort((a, b) => {
+  const sortedAndAggregatedData = filterInvalidData(aggregateData(formattedData)).sort((a, b) => {
     const aDate = getMonthIndex(a.referencia);
     const bDate = getMonthIndex(b.referencia);
     
@@ -100,21 +120,35 @@ const EnergyLineChart = ({ data }) => {
         <YAxis />
         <Tooltip />
         <Legend />
+
+        {/* Linhas para Energia Compensada */}
+        {sortedAndAggregatedData.some(item => item.energiaCompensadaSomatorio > 0) && (
+          <>
+            <Line type="monotone" dataKey="energiaCompensadaSomatorio" stroke="#ff7300" name="Energia Compensada (Somatório kWh)" />
+            <Line type="monotone" dataKey="energiaCompensadaMedia" stroke="#387908" name="Energia Compensada (Média kWh)" />
+          </>
+        )}
+
+        {/* Linhas para Economia GDR */}
+        {sortedAndAggregatedData.some(item => item.economiaGDRSomatorio > 0) && (
+          <>
+            <Line type="monotone" dataKey="economiaGDRSomatorio" stroke="#0000ff" name="Economia GDR (Somatório R$)" />
+            <Line type="monotone" dataKey="economiaGDRMedia" stroke="#f44290" name="Economia GDR (Média R$)" />
+          </>
+        )}
+
         {/* Linhas para Energia Consumida */}
         <Line type="monotone" dataKey="energiaConsumidaSomatorio" stroke="#8884d8" name="Energia Consumida (Somatório kWh)" />
         <Line type="monotone" dataKey="energiaConsumidaMedia" stroke="#82ca9d" name="Energia Consumida (Média kWh)" />
-        
-        {/* Linhas para Energia Compensada */}
-        <Line type="monotone" dataKey="energiaCompensadaSomatorio" stroke="#ff7300" name="Energia Compensada (Somatório kWh)" />
-        <Line type="monotone" dataKey="energiaCompensadaMedia" stroke="#387908" name="Energia Compensada (Média kWh)" />
-        
+
         {/* Linhas para Valor Sem GDR */}
         <Line type="monotone" dataKey="valorSemGDRSomatorio" stroke="#ff0000" name="Valor Sem GDR (Somatório R$)" />
-        <Line type="monotone" dataKey="valorSemGDRMedia" stroke="#00ff00" name="Valor Sem GDR (Média R$)" />
-        
-        {/* Linhas para Economia GDR */}
-        <Line type="monotone" dataKey="economiaGDRSomatorio" stroke="#0000ff" name="Economia GDR (Somatório R$)" />
-        <Line type="monotone" dataKey="economiaGDRMedia" stroke="#f44290" name="Economia GDR (Média R$)" />
+
+        {/* Linhas para Contribuição Iluminação */}
+        <Line type="monotone" dataKey="contribuicaoIluminacaoSomatorio" stroke="#ff7300" name="Contribuição Iluminação (Somatório R$)" />
+
+        {/* Linhas para Valor Total */}
+        <Line type="monotone" dataKey="valorTotalSomatorio" stroke="#00ff00" name="Valor Total da Fatura (Somatório R$)" />
       </LineChart>
     </ResponsiveContainer>
   );
